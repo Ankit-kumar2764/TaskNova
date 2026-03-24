@@ -41,7 +41,7 @@ Custom hook `useDragDrop` using pointer events:
 
 ### Virtual Scrolling
 
-`useVirtualScroll` hook:
+`useListRendering` hook:
 - Calculates visible range based on scrollTop
 - Renders only visible items + buffer
 - Uses absolute positioning for items
@@ -78,7 +78,7 @@ src/
     useCollaboration.ts
     useDragDrop.ts
     useFilters.ts
-    useVirtualScroll.ts
+    useListRendering.ts
   store/
     useTaskStore.ts
   types/

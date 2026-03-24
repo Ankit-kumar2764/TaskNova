@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTaskStore } from '../store/useTaskStore';
 import { useFilters } from '../hooks/useFilters';
-import { useVirtualScroll } from '../hooks/useVirtualScroll';
+import { useListRendering } from '../hooks/useListRendering';
 import { Avatar } from './Avatar';
 import { PriorityBadge } from './PriorityBadge';
 
@@ -37,7 +37,7 @@ export default function ListView() {
     });
   }, [filteredTasks, sort]);
 
-  const { visibleItems, containerRef, totalHeight, offsetY } = useVirtualScroll(sortedTasks, 70, 600);
+  const { visibleItems, containerRef, totalHeight, offsetY } = useListRendering(sortedTasks, 70, 600);
 
   const setSortKey = (key: 'title' | 'priority' | 'dueDate') => {
     setSort({
