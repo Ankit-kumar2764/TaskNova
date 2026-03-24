@@ -4,12 +4,12 @@ const usedPriorities: Priority[] = ['Low', 'Medium', 'High', 'Critical'];
 const usedStatuses: Status[] = ['To Do', 'In Progress', 'In Review', 'Done'];
 
 export const users: User[] = [
-  { id: '1', name: 'John Doe', avatar: 'JD' },
-  { id: '2', name: 'Jane Smith', avatar: 'JS' },
-  { id: '3', name: 'Bob Johnson', avatar: 'BJ' },
-  { id: '4', name: 'Alice Brown', avatar: 'AB' },
-  { id: '5', name: 'Charlie Wilson', avatar: 'CW' },
-  { id: '6', name: 'Diana Lee', avatar: 'DL' },
+  { id: '1', name: 'Ankit Kumar', avatar: 'AK' },
+  { id: '2', name: 'Priya Sharma', avatar: 'PS' },
+  { id: '3', name: 'Rajesh Patel', avatar: 'RP' },
+  { id: '4', name: 'Neha Singh', avatar: 'NS' },
+  { id: '5', name: 'Arjun Verma', avatar: 'AV' },
+  { id: '6', name: 'Pooja Gupta', avatar: 'PG' },
 ];
 
 const adjectives = ['New', 'Improved', 'Critical', 'Minor', 'Major', 'Urgent', 'Quick', 'Refactor'];
