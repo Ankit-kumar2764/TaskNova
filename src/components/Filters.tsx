@@ -60,7 +60,7 @@ export default function Filters() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-3 bg-white rounded-lg shadow-sm border border-gray-200 mt-2">
       <div>
-        <p className="text-xs font-semibold">Status</p>
+        <p className="text-sm font-bold text-gray-900 mb-3 pb-2 border-b-2 border-gray-300">Status</p>
         {statuses.map((status) => (
           <label key={status} className="block text-xs mt-2 cursor-pointer flex items-center">
             <input type="checkbox" className="cursor-pointer" checked={filters.status.includes(status as any)} onChange={(e) => setStatus(status, e.target.checked)} />
@@ -70,7 +70,7 @@ export default function Filters() {
       </div>
 
       <div>
-        <p className="text-xs font-semibold">Priority</p>
+        <p className="text-sm font-bold text-gray-900 mb-3 pb-2 border-b-2 border-gray-300">Priority</p>
         {priorities.map((priority) => (
           <label key={priority} className="block text-xs mt-2 cursor-pointer flex items-center">
             <input type="checkbox" className="cursor-pointer" checked={filters.priority.includes(priority as any)} onChange={(e) => setPriority(priority, e.target.checked)} />
@@ -80,7 +80,7 @@ export default function Filters() {
       </div>
 
       <div>
-        <p className="text-xs font-semibold">Assignee</p>
+        <p className="text-sm font-bold text-gray-900 mb-3 pb-2 border-b-2 border-gray-300">Developer Name</p>
         {users.map((user) => (
           <label key={user.id} className="block text-xs mt-2 cursor-pointer flex items-center">
             <input type="checkbox" className="cursor-pointer" checked={filters.assignee.includes(user.id)} onChange={(e) => setAssignee(user.id, e.target.checked)} />
