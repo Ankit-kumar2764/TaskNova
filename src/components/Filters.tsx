@@ -62,9 +62,9 @@ export default function Filters() {
       <div>
         <p className="text-xs font-semibold">Status</p>
         {statuses.map((status) => (
-          <label key={status} className="block text-xs mt-1">
-            <input type="checkbox" checked={filters.status.includes(status as any)} onChange={(e) => setStatus(status, e.target.checked)} />
-            <span className="ml-1">{status}</span>
+          <label key={status} className="block text-xs mt-2 cursor-pointer flex items-center">
+            <input type="checkbox" className="cursor-pointer" checked={filters.status.includes(status as any)} onChange={(e) => setStatus(status, e.target.checked)} />
+            <span className="ml-2 font-medium text-gray-800">{status}</span>
           </label>
         ))}
       </div>
@@ -72,9 +72,9 @@ export default function Filters() {
       <div>
         <p className="text-xs font-semibold">Priority</p>
         {priorities.map((priority) => (
-          <label key={priority} className="block text-xs mt-1">
-            <input type="checkbox" checked={filters.priority.includes(priority as any)} onChange={(e) => setPriority(priority, e.target.checked)} />
-            <span className="ml-1">{priority}</span>
+          <label key={priority} className="block text-xs mt-2 cursor-pointer flex items-center">
+            <input type="checkbox" className="cursor-pointer" checked={filters.priority.includes(priority as any)} onChange={(e) => setPriority(priority, e.target.checked)} />
+            <span className="ml-2 font-medium text-gray-800">{priority}</span>
           </label>
         ))}
       </div>
@@ -82,9 +82,9 @@ export default function Filters() {
       <div>
         <p className="text-xs font-semibold">Assignee</p>
         {users.map((user) => (
-          <label key={user.id} className="block text-xs mt-1">
-            <input type="checkbox" checked={filters.assignee.includes(user.id)} onChange={(e) => setAssignee(user.id, e.target.checked)} />
-            <span className="ml-1">{user.name}</span>
+          <label key={user.id} className="block text-xs mt-2 cursor-pointer flex items-center">
+            <input type="checkbox" className="cursor-pointer" checked={filters.assignee.includes(user.id)} onChange={(e) => setAssignee(user.id, e.target.checked)} />
+            <span className="ml-2 font-medium text-gray-800">{user.name}</span>
           </label>
         ))}
       </div>
