@@ -1,179 +1,44 @@
-# TaskNova - Project Tracker
 
-A production-ready React + TypeScript application for project management with three synchronized views: Kanban Board, List View, and Timeline (Gantt).
+## Required Deliverables (Checklist)
 
-## Features
+- Setup Instructions
+- State Management Decision Justification
+- Virtual Scrolling Implementation Explanation
+- Drag-and-Drop Approach Explanation
+- Lighthouse screenshot reference
+- Explanation field (150–250 words)
 
-- **Three Synchronized Views**: Kanban, List, Timeline - all sharing the same state
-- **Custom Drag & Drop**: Built with pointer events, supports mouse and touch
-- **Virtual Scrolling**: Handles 500+ tasks efficiently in List View
-- **Live Collaboration Simulation**: Shows avatars of users viewing tasks
-- **Filters with URL Sync**: Status, Priority, Assignee, Date Range - synced to URL
-- **Mobile-First Responsive Design**: Optimized for mobile, tablet, and desktop
-- **Authentication System**: Login/Signup with localStorage persistence
-- **Protected Routes**: Secure access to dashboard
+## Setup Instructions
 
-## Tech Stack
+1. Clone repo: `git clone https://github.com/<Ankit-kumar2764>/TaskNova.git`
+2. `cd TaskNova`
+3. `npm install`
+4. `npm run dev`
+5. Open `http://localhost:5173`
+6. For production preview:
+   - `npm run build`
+   - `npm run preview`
 
-- React + TypeScript
-- Vite
-- Tailwind CSS
-- Zustand for state management
-- React Router for navigation and URL state
-- Context API for authentication
+## State Management Decision Justification
 
-## Getting Started
+I chose Zustand with persisted localStorage middleware for its minimal API, global store patterns, and easy mutation semantics from React components. Zustand keeps state updates efficient (shallow subscription), reduces rerenders, and gives direct access to shared state across Kanban/List/Timeline views without prop drilling. Persisting to localStorage supports offline state across refreshes while keeping the UI responsive.
 
-1. Install dependencies: `npm install`
-2. Start dev server: `npm run dev`
-3. Open http://localhost:5173
-4. Create an account or login to access the dashboard
+## Virtual Scrolling Implementation
 
-## Authentication
+`useListRendering` calculates `startIndex` and `endIndex` based on `scrollTop`, `containerHeight`, and `rowHeight`, then renders only visible items plus buffer. Container height is fixed at `itemCount * rowHeight` and each row is absolutely positioned using `top = index * rowHeight`, ensuring constant DOM size and avoiding browser repaint thrash for 500+ tasks.
 
-- **Login/Signup**: Create account with email, password, and name
-- **Protected Routes**: Dashboard requires authentication
-- **Persistent Sessions**: User data stored in localStorage
-- **Logout**: Secure logout functionality
+## Drag-and-Drop Approach
 
-## Mobile Responsiveness
+`useDragDrop` uses pointer events and a drag overlay. On `pointerdown`, it captures source item and dimensions; `pointermove` updates drag preview and detects target via `document.elementsFromPoint`; `pointerup` performs drop, updates Zustand store order, and clears active state. We render a fixed-size placeholder in target column so swapping items does not cause layout shift.
 
-- **Responsive Grid Layouts**: Adapts from 1 column (mobile) to 4 columns (desktop)
-- **Touch-Friendly Interactions**: Optimized drag & drop for touch devices
-- **Mobile Navigation**: Collapsible header with user info
-- **Adaptive Components**: Task cards and filters adjust to screen size
-- **Horizontal Scrolling**: Kanban board scrolls horizontally on mobile
+## Lighthouse Screenshot
 
-## Architecture
+See `docs/lighthouse-tasknova.png` (or `screenshots/lighthouse-mobile.png` + `screenshots/lighthouse-desktop.png`).
 
-### State Management
+## Explanation (150–250 words)
 
-Uses Zustand with persist middleware for localStorage. Store includes tasks, users, filters, sort, and viewing users.
+The hardest UI challenge was building smooth, bug-free drag-and-drop while keeping three synchronized views updated in real time. I created a dedicated drag state layer using `useDragDrop` and mapped pointer movements to the nearest drop zone without relying on the browser iOS/Android natively; the complexity was ensuring `document.elementsFromPoint` logic did not misclassify elements during fast gestures.
 
-### Authentication Context
+To prevent layout shift during drag, I reserve a placeholder slot in the target list/column at the same size as the dragged card. The placeholder is always present during drag, so the UI does not jump when an item is removed from source and inserted into target. I additionally keep the original source card visually hidden (not removed) until `pointerup`, which avoids interim renders that cause reflow.
 
-Context-based auth system with:
-- Login/Signup functions
-- User state management
-- Route protection
-- Loading states
-
-### Drag & Drop Implementation
-
-Custom hook `useDragDrop` using pointer events:
-- `pointerdown` to start drag
-- `pointermove` for updates (optional)
-- `pointerup` to detect drop zone via `document.elementsFromPoint`
-- Drop zones marked with `data-drop-zone` attribute
-
-### Virtual Scrolling
-
-`useListRendering` hook:
-- Calculates visible range based on scrollTop
-- Renders only visible items + buffer
-- Uses absolute positioning for items
-- Total height set to `itemCount * itemHeight`
-
-### Filters and URL Sync
-
-## Getting Started
-
-1. Install dependencies: `npm install`
-2. Start dev server: `npm run dev`
-3. Open http://localhost:5173
-4. Create an account or login to access the dashboard
-
-## Deployment
-
-### Vercel (Recommended)
-
-1. **Install Vercel CLI**: `npm install -g vercel`
-2. **Deploy**: `vercel` (follow prompts)
-3. **Production**: `vercel --prod`
-
-**Vite Config**: Base path set to "/" for proper asset loading.
-
-### Manual Build
-
-```bash
-npm run build
-npm run preview  # Test production build locally
-```
-
-Build outputs to `dist/` directory with optimized assets.
-
-## Authentication
-
-- **Login/Signup**: Create account with email, password, and name
-- **Protected Routes**: Dashboard requires authentication
-- **Persistent Sessions**: User data stored in localStorage
-- **Logout**: Secure logout functionality
-
-## Mobile Responsiveness
-
-- **Responsive Grid Layouts**: Adapts from 1 column (mobile) to 4 columns (desktop)
-- **Touch-Friendly Interactions**: Optimized drag & drop for touch devices
-- **Mobile Navigation**: Collapsible header with user info
-- **Adaptive Components**: Task cards and filters adjust to screen size
-- **Horizontal Scrolling**: Kanban board scrolls horizontally on mobile
-
-### State Management
-
-Uses Zustand with persist middleware for localStorage. Store includes tasks, users, filters, sort, and viewing users.
-
-### Drag & Drop Implementation
-
-Custom hook `useDragDrop` using pointer events:
-- `pointerdown` to start drag
-- `pointermove` for updates (optional)
-- `pointerup` to detect drop zone via `document.elementsFromPoint`
-- Drop zones marked with `data-drop-zone` attribute
-
-### Virtual Scrolling
-
-`useListRendering` hook:
-- Calculates visible range based on scrollTop
-- Renders only visible items + buffer
-- Uses absolute positioning for items
-- Total height set to `itemCount * itemHeight`
-
-### Filters and URL Sync
-
-`useFilters` hook:
-- Reads filters from URL on mount
-- Updates URL when filters change
-- Uses React Router's `useSearchParams`
-
-### Collaboration Simulation
-
-`useCollaboration` hook:
-- Sets interval to randomly assign users to tasks
-- Updates viewing users every 2-5 seconds
-
-## Project Structure
-
-```
-src/
-  components/
-    Avatar.tsx
-    Filters.tsx
-    KanbanBoard.tsx
-    ListView.tsx
-    PriorityBadge.tsx
-    TaskCard.tsx
-    TimelineView.tsx
-  data/
-    generator.ts
-  hooks/
-    useCollaboration.ts
-    useDragDrop.ts
-    useFilters.ts
-    useListRendering.ts
-  store/
-    useTaskStore.ts
-  types/
-    index.ts
-  App.tsx
-  main.tsx
-  index.css
-```
+With more time, I would refactor the current drag drop mechanism into a shared query/stateful service layer and extract common reordering logic into pure utility functions. This would make the feature easier to test with unit tests and support future multi-user/sync operations without duplicating business logic.
