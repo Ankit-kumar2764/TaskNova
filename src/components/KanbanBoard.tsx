@@ -29,20 +29,23 @@ export default function KanbanBoard() {
   const taskViewById = (taskId: string) => viewingUsers.filter((v) => v.taskId === taskId).map((v) => v.userId);
 
   return (
-    <div className="flex gap-3 p-3 overflow-x-auto h-full">
+    <div className="flex gap-2 sm:gap-3 p-2 sm:p-3 overflow-x-auto h-full pb-4">
       {statuses.map((status) => {
         const branch = filteredTasks.filter((task) => task.status === status);
         return (
-          <div key={status} className="min-w-[250px] bg-gray-100 rounded-lg p-2 border border-gray-200" data-drop-zone={status}>
-            <h2 className="text-sm font-bold mb-2">{status} ({branch.length})</h2>
-            <div className="space-y-2 max-h-[calc(100vh-250px)] overflow-y-auto">
+          <div key={status} className="min-w-[280px] sm:min-w-[300px] bg-gray-100 rounded-lg p-2 sm:p-3 border border-gray-200 flex-shrink-0" data-drop-zone={status}>
+            <h2 className="text-sm sm:text-base font-bold mb-2 text-gray-800">{status} ({branch.length})</h2>
+            <div className="space-y-2 max-h-[calc(100vh-200px)] sm:max-h-[calc(100vh-250px)] overflow-y-auto">
               {branch.length === 0 ? (
-                <div className="text-center p-6 text-gray-500 bg-white rounded">No tasks here</div>
+                <div className="text-center p-4 sm:p-6 text-gray-500 bg-white rounded border-2 border-dashed border-gray-300">
+                  <div className="text-2xl sm:text-3xl mb-2">📝</div>
+                  <div className="text-sm sm:text-base">No tasks here</div>
+                </div>
               ) : (
                 branch.map((task) => (
                   <div
                     key={task.id}
-                    className={draggedId === task.id ? 'opacity-50' : ''}
+                    className={`cursor-pointer transition-all duration-200 ${draggedId === task.id ? 'opacity-50 scale-95' : 'hover:scale-105'}`}
                     onPointerDown={(e) => handlePointerDown(e as any, task.id)}
                     onPointerUp={(e) => handlePointerUp(e as any)}
                   >

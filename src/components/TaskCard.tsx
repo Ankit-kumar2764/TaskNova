@@ -17,32 +17,37 @@ export default function TaskCard({ task, users, viewingUserIds }: TaskCardProps)
     : 'No due date';
 
   return (
-    <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition duration-150">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="font-semibold text-sm">{task.title}</h3>
-        <PriorityBadge priority={task.priority} />
-      </div>
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-2">
-          {assignee ? <Avatar user={assignee} /> : null}
-          <span className="text-xs text-gray-500">{assignee?.name ?? 'Unassigned'}</span>
+    <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition duration-150 min-h-[120px] sm:min-h-[100px]">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="font-semibold text-sm sm:text-base flex-1 leading-tight break-words">{task.title}</h3>
+          <PriorityBadge priority={task.priority} />
         </div>
-        <span className={`text-xs ${task.dueDate && task.dueDate < now ? 'text-red-600' : 'text-gray-600'}`}>
-          {task.dueDate && overdueDays === 0 && 'Due Today'}
-          {task.dueDate && overdueDays > 0 && `${overdueDays} days overdue`}
-          {task.dueDate && overdueDays < 1 && task.dueDate >= now ? dueText : ''}
-          {!task.dueDate && 'No due date'}
-        </span>
-      </div>
-      {viewingUserIds.length > 0 && (
-        <div className="flex items-center gap-1 mt-3">
-          {viewingUserIds.slice(0, 3).map((id) => {
-            const user = users.find((u) => u.id === id);
-            return user ? <Avatar key={id} user={user} /> : null;
-          })}
-          {viewingUserIds.length > 3 && <span className="text-xs text-gray-500">+{viewingUserIds.length - 3}</span>}
+
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            {assignee ? <Avatar user={assignee} /> : null}
+            <span className="text-xs sm:text-sm text-gray-500 truncate">{assignee?.name ?? 'Unassigned'}</span>
+          </div>
+          <span className={`text-xs sm:text-sm whitespace-nowrap ${task.dueDate && task.dueDate < now ? 'text-red-600 font-medium' : 'text-gray-600'}`}>
+            {task.dueDate && overdueDays === 0 && 'Due Today'}
+            {task.dueDate && overdueDays > 0 && `${overdueDays}d overdue`}
+            {task.dueDate && overdueDays < 1 && task.dueDate >= now ? dueText : ''}
+            {!task.dueDate && 'No due date'}
+          </span>
         </div>
-      )}
+
+        {viewingUserIds.length > 0 && (
+          <div className="flex items-center gap-1 mt-1">
+            <span className="text-xs text-gray-500 mr-1">👁️</span>
+            {viewingUserIds.slice(0, 3).map((id) => {
+              const user = users.find((u) => u.id === id);
+              return user ? <Avatar key={id} user={user} /> : null;
+            })}
+            {viewingUserIds.length > 3 && <span className="text-xs text-gray-500">+{viewingUserIds.length - 3}</span>}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

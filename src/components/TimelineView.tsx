@@ -47,21 +47,38 @@ export default function TimelineView() {
   const todayOffset = ((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) * PIXELS_PER_DAY;
 
   if (filteredTasks.length === 0) {
-    return <div className="p-6 text-center text-gray-500">No tasks in timeline.</div>;
+    return (
+      <div className="p-6 text-center text-gray-500">
+        <div className="text-4xl mb-4">📅</div>
+        <div className="text-sm sm:text-base">No tasks in timeline.</div>
+        <div className="text-xs text-gray-400 mt-2">Try adjusting your filters</div>
+      </div>
+    );
   }
 
   return (
-    <div className="overflow-x-auto p-3">
+    <div className="overflow-x-auto p-2 sm:p-3">
       <div className="relative" style={{ width: totalWidth + 200, minHeight: filteredTasks.length * 60 + 120 }}>
         <div className="absolute inset-y-0" style={{ left: todayOffset, width: 2, background: 'red' }} />
+        <div className="absolute top-2 left-4 text-xs text-red-600 font-medium">Today</div>
 
         {Array.from({ length: Math.ceil(totalDays / 30) }, (_, i) => {
           const markerDate = new Date(start.getTime());
           markerDate.setDate(start.getDate() + i * 30);
           const left = ((markerDate.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) * PIXELS_PER_DAY;
           return (
-            <div key={i} className="absolute top-0 bottom-0" style={{ left, width: 1, background: '#d1d5db' }}>
-              <div className="absolute -top-5 text-xs text-gray-500">{markerDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>
+            <div key={i} className="absolute top-0 bottom-0" style={{ left, width: 1, background: '#d1d5db' }} />
+          );
+        })}
+
+        {/* Month labels - hide on very small screens */}
+        {Array.from({ length: Math.ceil(totalDays / 30) }, (_, i) => {
+          const markerDate = new Date(start.getTime());
+          markerDate.setDate(start.getDate() + i * 30);
+          const left = ((markerDate.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) * PIXELS_PER_DAY;
+          return (
+            <div key={`label-${i}`} className="absolute top-0 hidden sm:block" style={{ left: left + 4 }}>
+              <div className="text-xs text-gray-500">{markerDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>
             </div>
           );
         })}
@@ -76,16 +93,17 @@ export default function TimelineView() {
 
           return (
             <div key={task.id} className="absolute left-0 right-0" style={{ top: idx * 60 + 40, height: 44 }}>
-              <div className="absolute left-0 w-40 text-xs truncate" style={{ top: 10 }}>
-                {task.title}
+              <div className="absolute left-0 w-32 sm:w-40 text-xs truncate pr-2" style={{ top: 10 }}>
+                <span className="font-medium">{task.title}</span>
               </div>
 
               <div
-                className={`absolute rounded flex items-center gap-2 px-2 text-xs ${isOverdue ? 'bg-red-300 text-red-900' : 'bg-blue-500 text-white'}`}
-                style={{ left: left + 160, width }}
+                className={`absolute rounded flex items-center gap-2 px-2 text-xs shadow-sm border ${isOverdue ? 'bg-red-300 text-red-900 border-red-400' : 'bg-blue-500 text-white border-blue-600'}`}
+                style={{ left: left + 140, width: Math.max(width, 120), minWidth: 120 }}
               >
-                <span>{task.title}</span>
+                <span className="truncate flex-1">{task.title}</span>
                 {assignee && <Avatar user={assignee} />}
+                {isOverdue && <span className="text-red-700 font-bold">!</span>}
               </div>
             </div>
           );

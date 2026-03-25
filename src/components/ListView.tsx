@@ -47,8 +47,9 @@ export default function ListView() {
   };
 
   return (
-    <div className="p-3 h-full">
-      <div className="grid grid-cols-5 gap-2 text-xs font-semibold mb-2">
+    <div className="p-2 sm:p-3 h-full">
+      {/* Mobile: Stack vertically, Desktop: Grid */}
+      <div className="hidden sm:grid sm:grid-cols-5 sm:gap-2 text-xs font-semibold mb-2">
         <button onClick={() => setSortKey('title')} className="text-left">Title {sort.sortBy === 'title' ? (sort.sortOrder === 'asc' ? '↑' : '↓') : ''}</button>
         <button onClick={() => setSortKey('priority')}>Priority {sort.sortBy === 'priority' ? (sort.sortOrder === 'asc' ? '↑' : '↓') : ''}</button>
         <span>Assignee</span>
@@ -56,10 +57,26 @@ export default function ListView() {
         <span>Status</span>
       </div>
 
+      {/* Mobile sort buttons */}
+      <div className="flex gap-2 mb-3 sm:hidden">
+        <button onClick={() => setSortKey('title')} className="px-3 py-1 bg-gray-100 rounded text-xs">
+          Title {sort.sortBy === 'title' ? (sort.sortOrder === 'asc' ? '↑' : '↓') : ''}
+        </button>
+        <button onClick={() => setSortKey('priority')} className="px-3 py-1 bg-gray-100 rounded text-xs">
+          Priority {sort.sortBy === 'priority' ? (sort.sortOrder === 'asc' ? '↑' : '↓') : ''}
+        </button>
+        <button onClick={() => setSortKey('dueDate')} className="px-3 py-1 bg-gray-100 rounded text-xs">
+          Due Date {sort.sortBy === 'dueDate' ? (sort.sortOrder === 'asc' ? '↑' : '↓') : ''}
+        </button>
+      </div>
+
       {sortedTasks.length === 0 ? (
-        <div className="p-6 text-center text-gray-500">No tasks to display. Adjust filters or clear them to see tasks.</div>
+        <div className="p-6 text-center text-gray-500">
+          <div className="text-4xl mb-4">📋</div>
+          <div>No tasks to display. Adjust filters or clear them to see tasks.</div>
+        </div>
       ) : (
-        <div ref={containerRef} className="overflow-y-auto h-[calc(100vh-240px)] border border-gray-200 rounded">
+        <div ref={containerRef} className="overflow-y-auto h-[calc(100vh-200px)] sm:h-[calc(100vh-240px)] border border-gray-200 rounded">
           <div style={{ height: totalHeight, position: 'relative' }}>
             {visibleItems.map((task, index) => {
               const assignee = users.find((u) => u.id === task.assigneeId);
@@ -69,20 +86,61 @@ export default function ListView() {
               return (
                 <div
                   key={task.id}
-                  className={`grid grid-cols-5 gap-2 p-2 border-b ${isOverdue ? 'bg-red-50' : 'bg-white'}`}
+                  className={`p-3 border-b ${isOverdue ? 'bg-red-50' : 'bg-white'} hover:bg-gray-50 transition-colors`}
                   style={{ position: 'absolute', width: '100%', top, height: 70, boxSizing: 'border-box' }}
                 >
-                  <div className="truncate">{task.title}</div>
-                  <div><PriorityBadge priority={task.priority} /></div>
-                  <div className="flex items-center gap-2">{assignee && <Avatar user={assignee} />}<span className="text-xs">{assignee?.name}</span></div>
-                  <div className={isOverdue ? 'text-red-600 text-xs' : 'text-gray-700 text-xs'}>{task.dueDate?.toLocaleDateString() ?? 'N/A'}</div>
-                  <div>
-                    <select className="text-xs border rounded px-1" value={task.status} onChange={(e) => updateTask(task.id, { status: e.target.value as any })}>
-                      <option>To Do</option>
-                      <option>In Progress</option>
-                      <option>In Review</option>
-                      <option>Done</option>
-                    </select>
+                  {/* Desktop: Grid layout */}
+                  <div className="hidden sm:grid sm:grid-cols-5 sm:gap-2 sm:items-center h-full">
+                    <div className="truncate font-medium">{task.title}</div>
+                    <div><PriorityBadge priority={task.priority} /></div>
+                    <div className="flex items-center gap-2">
+                      {assignee && <Avatar user={assignee} />}
+                      <span className="text-xs truncate">{assignee?.name}</span>
+                    </div>
+                    <div className={`text-xs ${isOverdue ? 'text-red-600 font-medium' : 'text-gray-700'}`}>
+                      {task.dueDate?.toLocaleDateString() ?? 'N/A'}
+                    </div>
+                    <div>
+                      <select
+                        className="text-xs border rounded px-2 py-1 bg-white"
+                        value={task.status}
+                        onChange={(e) => updateTask(task.id, { status: e.target.value as any })}
+                      >
+                        <option>To Do</option>
+                        <option>In Progress</option>
+                        <option>In Review</option>
+                        <option>Done</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Mobile: Card layout */}
+                  <div className="sm:hidden space-y-2">
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-medium text-sm flex-1 mr-2 break-words">{task.title}</h3>
+                      <PriorityBadge priority={task.priority} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {assignee && <Avatar user={assignee} />}
+                        <span className="text-xs text-gray-600">{assignee?.name}</span>
+                      </div>
+                      <div className={`text-xs ${isOverdue ? 'text-red-600 font-medium' : 'text-gray-600'}`}>
+                        {task.dueDate?.toLocaleDateString() ?? 'No due date'}
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <select
+                        className="text-xs border rounded px-2 py-1 bg-white"
+                        value={task.status}
+                        onChange={(e) => updateTask(task.id, { status: e.target.value as any })}
+                      >
+                        <option>To Do</option>
+                        <option>In Progress</option>
+                        <option>In Review</option>
+                        <option>Done</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               );
