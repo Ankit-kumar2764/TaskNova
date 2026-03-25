@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import { useTaskStore } from './store/useTaskStore';
 import { useCollaboration } from './hooks/useCollaboration';
 import { useAuth } from './context/AuthContext';
@@ -69,7 +69,7 @@ function Dashboard() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -82,8 +82,9 @@ function App() {
           }
         />
         <Route path="/" element={<Login />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
