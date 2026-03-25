@@ -33,7 +33,7 @@ I chose Zustand with persisted localStorage middleware for its minimal API, glob
 
 ## Lighthouse Screenshot
 
-See `docs/lighthouse-tasknova.png` (or `screenshots/lighthouse-mobile.png` + `screenshots/lighthouse-desktop.png`).
+See `docs/lighthouse-tasknova.png` (or `screenshots/lighthouse-mobile.png` + `~screenshots/lighthouse-desktop~.png`).
 
 ## Explanation (150–250 words)
 
