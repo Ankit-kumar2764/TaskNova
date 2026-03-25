@@ -31,7 +31,7 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-slate-800 text-white p-2 sm:p-3 sticky top-0 z-20 shadow-lg">
+      <header className="bg-slate-800 text-white p-2 sm:p-3 sm:sticky sm:top-0 z-20 shadow-lg">
         <div className="container mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <div className="flex gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap">
@@ -56,7 +56,7 @@ function Dashboard() {
         </div>
       </header>
 
-      <main className="container mx-auto pb-6 px-2 sm:px-4 pt-4 sm:pt-6 min-h-[calc(100vh-120px)] sm:min-h-[calc(100vh-160px)]">
+      <main className="container mx-auto pb-6 px-2 sm:px-4 pt-4 sm:pt-0 min-h-[calc(100vh-100px)] sm:min-h-[calc(100vh-140px)]">
         <Routes>
           <Route path="/" element={<KanbanBoard />} />
           <Route path="/list" element={<ListView />} />
