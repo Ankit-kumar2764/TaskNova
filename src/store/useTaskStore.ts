@@ -27,6 +27,19 @@ const initialSort: SortConfig = {
   sortOrder: 'asc',
 };
 
+const parseDate = (value?: Date | string): Date | undefined => {
+  if (!value) return undefined;
+  return value instanceof Date ? value : new Date(value);
+};
+
+const normalizeTask = (task: Task | any): Task => ({
+  ...task,
+  startDate: parseDate(task.startDate),
+  dueDate: parseDate(task.dueDate),
+  createdAt: parseDate(task.createdAt) || new Date(),
+  updatedAt: parseDate(task.updatedAt) || new Date(),
+});
+
 export const useTaskStore = create<TaskStore>()(
   persist(
     (set, get) => ({
@@ -50,14 +63,26 @@ export const useTaskStore = create<TaskStore>()(
       updateViewingUsers: (viewingUsers) => set({ viewingUsers }),
 
       initializeData: () => {
-        if (get().tasks.length === 0) {
-          set({ tasks: generateTasks(520) });
+        const currentTasks = get().tasks;
+
+        if (currentTasks.length > 0) {
+          const normalized = currentTasks.map(normalizeTask);
+          set({ tasks: normalized });
+          return;
         }
+
+        set({ tasks: generateTasks(520) });
       },
     }),
     {
       name: 'tasknova-storage',
       partialize: (state) => ({ tasks: state.tasks, filters: state.filters, sort: state.sort }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        if (Array.isArray(state.tasks)) {
+          state.tasks = state.tasks.map(normalizeTask);
+        }
+      },
     },
   ),
 );
