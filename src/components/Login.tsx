@@ -35,6 +35,12 @@ export default function Login() {
 
   const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
     setError('');
+
+    if (!credentialResponse?.credential) {
+      setError('Google login failed. Missing credential token.');
+      return;
+    }
+
     try {
       const success = await loginWithGoogle(credentialResponse.credential);
       if (success) {
