@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
@@ -33,7 +33,7 @@ export default function Login() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
     setError('');
     try {
       const success = await loginWithGoogle(credentialResponse.credential);
@@ -42,7 +42,7 @@ export default function Login() {
       } else {
         setError('Failed to login with Google');
       }
-    } catch (err) {
+    } catch {
       setError('Google login error. Please try again.');
     }
   };

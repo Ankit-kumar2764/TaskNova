@@ -6,6 +6,11 @@ interface User {
   name: string;
 }
 
+interface StoredUser extends User {
+  password: string;
+  isGoogleUser?: boolean;
+}
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
@@ -39,7 +44,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
-      } catch (error) {
+      } catch {
         localStorage.removeItem('tasknova-user');
       }
     }
@@ -54,7 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Get stored users
       const users = JSON.parse(localStorage.getItem('tasknova-users') || '[]');
-      const foundUser = users.find((u: any) => u.email === email && u.password === password);
+      const foundUser = users.find((u: StoredUser) => u.email === email && u.password === password);
 
       if (foundUser) {
         const userData = { id: foundUser.id, email: foundUser.email, name: foundUser.name };
@@ -78,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const users = JSON.parse(localStorage.getItem('tasknova-users') || '[]');
 
       // Check if user already exists
-      if (users.some((u: any) => u.email === email)) {
+      if (users.some((u: StoredUser) => u.email === email)) {
         return false;
       }
 
@@ -120,7 +125,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const users = JSON.parse(localStorage.getItem('tasknova-users') || '[]');
       
       // Check if user exists, if not create them
-      let foundUser = users.find((u: any) => u.email === email);
+      let foundUser = users.find((u: StoredUser) => u.email === email);
       if (!foundUser) {
         foundUser = {
           id: `google_${id}`,
@@ -137,8 +142,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(userData);
       localStorage.setItem('tasknova-user', JSON.stringify(userData));
       return true;
-    } catch (error) {
-      console.error('Google login error:', error);
+    } catch {
+      console.error('Google login error');
       return false;
     } finally {
       setLoading(false);
