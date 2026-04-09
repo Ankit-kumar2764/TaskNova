@@ -10,6 +10,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   signup: (email: string, password: string, name: string) => Promise<boolean>;
+  loginWithGoogle: (credential: string) => Promise<boolean>;
   logout: () => void;
   loading: boolean;
 }
@@ -102,6 +103,48 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = async (credential: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      // Decode JWT token from Google
+      const base64Url = credential.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const decodedToken = JSON.parse(jsonPayload);
+      const { email, name, sub: id } = decodedToken;
+
+      // Get stored users
+      const users = JSON.parse(localStorage.getItem('tasknova-users') || '[]');
+      
+      // Check if user exists, if not create them
+      let foundUser = users.find((u: any) => u.email === email);
+      if (!foundUser) {
+        foundUser = {
+          id: `google_${id}`,
+          email,
+          name,
+          password: '', // Google users don't have passwords
+          isGoogleUser: true,
+        };
+        users.push(foundUser);
+        localStorage.setItem('tasknova-users', JSON.stringify(users));
+      }
+
+      const userData = { id: foundUser.id, email: foundUser.email, name: foundUser.name };
+      setUser(userData);
+      localStorage.setItem('tasknova-user', JSON.stringify(userData));
+      return true;
+    } catch (error) {
+      console.error('Google login error:', error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('tasknova-user');
@@ -111,6 +154,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     login,
     signup,
+    loginWithGoogle,
     logout,
     loading,
   };
