@@ -5,7 +5,13 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext.tsx'
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '764086051850-6qr4p6gpi6hn506pt8ejuq83di341hur.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+if (!GOOGLE_CLIENT_ID) {
+  throw new Error(
+    'Missing VITE_GOOGLE_CLIENT_ID. Add your Google OAuth client ID to .env and ensure your localhost and production origin are authorized in Google Cloud.'
+  );
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
